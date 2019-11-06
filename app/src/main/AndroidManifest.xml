@@ -2,14 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chungchunpay">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/logo_foreground"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login_Activity"></activity>
+        <activity android:name=".KakaoSignupActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".Login_Activity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".splash"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -19,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="8fd4c758eebb28e2b07a2e0ae850a082" />
     </application>
+
 
 </manifest>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">청춘페이</string>
+    <string name="kakao_app_key">8fd4c758eebb28e2b07a2e0ae850a082</string>
 </resources>
