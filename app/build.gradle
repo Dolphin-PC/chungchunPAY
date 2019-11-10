@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 
 android {
     compileSdkVersion 29
@@ -18,18 +21,42 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin' // src/main/kotlin 디렉터리를 소스 디렉터리에 추가합니다.
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.firebase:firebase-database:16.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+
+    //Glide
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    //KAKAO
     implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
 
+    //UI - transitioner API
+    implementation 'bg.devlabs.transitioner:transitioner:1.3'
 
+    //Naver Map API
+    implementation 'com.naver.maps:map-sdk:3.6.0'
+
+    //Google 현재 내 위치
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    //Sliding Up Panel
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+    //Sliding Root Nav
+    implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
 }

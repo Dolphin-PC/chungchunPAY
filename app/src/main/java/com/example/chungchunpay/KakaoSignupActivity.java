@@ -2,6 +2,7 @@ package com.example.chungchunpay;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -79,6 +80,20 @@ public class KakaoSignupActivity extends Activity {
     }
     void redirectMainActivity(String nickname,long id,String profile){
         //첫 로그인
+        SharedPreferences positionDATA = getSharedPreferences("LoginDATA",MODE_PRIVATE);
+        SharedPreferences.Editor editor = positionDATA.edit();
+//        Intent intent = new Intent(this,Permission.class);
+        editor.putString("USERNAME",nickname);
+        editor.putString("ID",id+"");
+        if(profile=="") {
+//            editor.putString("PROFILE","");
+        }
+        else
+            editor.putString("PROFILE",profile);
+//        editor.putString("GENDER","남자");
+//        editor.putBoolean("Guide",false);
+        editor.apply();
+
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
         finish();
