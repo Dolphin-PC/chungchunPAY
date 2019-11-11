@@ -1,4 +1,4 @@
-package com.example.chungchunpay;
+package com.example.chungchunpay.kakao;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.chungchunpay.activity.MainActivity;
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;

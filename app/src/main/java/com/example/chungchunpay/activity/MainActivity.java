@@ -1,5 +1,6 @@
-package com.example.chungchunpay;
+package com.example.chungchunpay.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -20,7 +21,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.chungchunpay.fragment.CenteredTextFragment;
+import com.example.chungchunpay.R;
+import com.example.chungchunpay.fragment.CartFragment;
+import com.example.chungchunpay.fragment.HomeFragment;
+import com.example.chungchunpay.fragment.SettingFragment;
+import com.example.chungchunpay.fragment.WalletFragment;
 import com.example.chungchunpay.menu.DrawerAdapter;
 import com.example.chungchunpay.menu.DrawerItem;
 import com.example.chungchunpay.menu.SimpleItem;
@@ -203,15 +208,36 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
     @Override
     public void onItemSelected(int position) {
-        if (position == POS_LOGOUT) {
-            finish();
+        switch (position){
+            case POS_HOME :
+                showFragment(new HomeFragment());
+                break;
+
+            case POS_WALLET :
+                showFragment(new WalletFragment());
+                break;
+
+            case POS_SETTING :
+                showFragment(new SettingFragment());
+                break;
+
+            case POS_CART :
+                showFragment(new CartFragment());
+                break;
+
+            case POS_LOGOUT :
+                finish();
+
+                //TODO : 로그아웃 처리하기
+                Intent intent = new Intent(getApplicationContext(),Login_Activity.class);
+                startActivity(intent);
         }
         slidingRootNav.closeMenu();
-        Fragment selectedScreen = CenteredTextFragment.createFor(screenTitles[position]);
-        showFragment(selectedScreen);
+//        Fragment selectedScreen = CenteredTextFragment.createFor(screenTitles[position]);
+
     }
 
-    private void showFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container,fragment)

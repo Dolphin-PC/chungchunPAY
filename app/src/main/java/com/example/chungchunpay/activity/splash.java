@@ -1,4 +1,4 @@
-package com.example.chungchunpay;
+package com.example.chungchunpay.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.example.chungchunpay.R;
 
 public class splash extends Activity {
 
@@ -28,7 +29,7 @@ public class splash extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent =new Intent(getBaseContext(),Login_Activity.class);
+                Intent intent =new Intent(getBaseContext(), Login_Activity.class);
                 startActivity(intent);
                 finish();
             }

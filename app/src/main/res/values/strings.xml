@@ -7,7 +7,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="account_balance">Account Balance</string>
+    <string name="account_balance">내 포인트</string>
     <string name="balance_currency">P</string>
     <string name="balance_amount">524.99</string>
     <string name="action_settings">Settings</string>
@@ -17,4 +17,9 @@
     <string name="action_anchor_disable">Disable Anchor Point</string>
     <string name="hello"><![CDATA[<b>The Awesome Sliding Up Panel</b><br/> Brought to you by<br/><a href="http://umanoapp.com">http://umanoapp.com</a>]]></string>
     <string name="follow"><![CDATA[Follow us<br/>on <a href="http://twitter.com/umanoapp">Twitter</a>]]></string>
+
+    <string name="card_title">청춘 PAY X 멍무이</string>
+    <string name="card_guide_text">디바이스의 뒷면을 카드 리더기에 대세요.</string>
+
+
 </resources>

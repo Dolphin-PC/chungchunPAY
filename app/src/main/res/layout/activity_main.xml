@@ -10,7 +10,7 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     android:gravity="bottom"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
@@ -26,10 +26,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="#FFFFFF"
         sothree:layout_constraintEnd_toEndOf="parent"
         sothree:layout_constraintStart_toStartOf="parent"
         sothree:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

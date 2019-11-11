@@ -1,4 +1,4 @@
-package com.example.chungchunpay;
+package com.example.chungchunpay.kakao;
 
 import android.app.Activity;
 import android.content.Context;

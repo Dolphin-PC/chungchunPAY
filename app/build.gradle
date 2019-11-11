@@ -24,6 +24,10 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin' // src/main/kotlin 디렉터리를 소스 디렉터리에 추가합니다.
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
@@ -59,4 +63,7 @@ dependencies {
 
     //Sliding Root Nav
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
+
+    //flexbox
+    implementation 'com.google.android:flexbox:1.1.1'
 }
