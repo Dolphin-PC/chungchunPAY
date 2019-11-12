@@ -21,5 +21,14 @@
     <string name="card_title">청춘 PAY X 멍무이</string>
     <string name="card_guide_text">디바이스의 뒷면을 카드 리더기에 대세요.</string>
 
+    <string name="location_tracking_mode_none">None</string>
+    <string name="location_tracking_mode_no_follow">NoFollow</string>
+    <string name="location_tracking_mode_follow">Follow</string>
+    <string name="location_tracking_mode_face">Face</string>
+
+    <string name="menu_action_all_down">All down</string>
+    <string name="menu_action_up_down">Up down</string>
+    <string name="menu_action_up_down_stack">Up down stack</string>
+
 
 </resources>

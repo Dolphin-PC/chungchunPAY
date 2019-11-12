@@ -65,5 +65,8 @@ dependencies {
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
 
     //flexbox
-    implementation 'com.google.android:flexbox:1.1.1'
+    implementation 'com.google.android:flexbox:1.1.0'
+
+    //CardStackView
+    implementation 'com.loopeer.library:cardstack:1.0.2'
 }
