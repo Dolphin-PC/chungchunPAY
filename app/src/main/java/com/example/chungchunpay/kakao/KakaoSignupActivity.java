@@ -5,18 +5,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.chungchunpay.activity.Login_Activity;
 import com.example.chungchunpay.activity.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class KakaoSignupActivity extends Activity {
+    FirebaseFirestore DB = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +58,7 @@ public class KakaoSignupActivity extends Activity {
                 String profileImagePath = userProfile.getProfileImagePath();
                 String thumnailPath = userProfile.getThumbnailImagePath();
                 String UUID = userProfile.getUUID();
-                long id = userProfile.getId();
+                String id = userProfile.getId()+"";
 
                 Log.e("Profile : ", nickname + "");
                 Log.e("Profile : ", profileImagePath + "");
@@ -74,18 +84,20 @@ public class KakaoSignupActivity extends Activity {
         });
     }
     protected void redirectLoginActivity() {
-        final Intent intent = new Intent(this, MainActivity.class);
+        //로그인 오류로, Login 화면으로
+        final Intent intent = new Intent(this, Login_Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
     }
-    void redirectMainActivity(String nickname,long id,String profile){
+    void redirectMainActivity(String nickname,String id,String profile){
         //첫 로그인
-        SharedPreferences positionDATA = getSharedPreferences("LoginDATA",MODE_PRIVATE);
+        SharedPreferences positionDATA = getSharedPreferences("UserData",MODE_PRIVATE);
         SharedPreferences.Editor editor = positionDATA.edit();
 //        Intent intent = new Intent(this,Permission.class);
         editor.putString("USERNAME",nickname);
-        editor.putString("ID",id+"");
+        editor.putString("ID",id);
+        editor.putInt("POINT",0);
         if(profile=="") {
 //            editor.putString("PROFILE","");
         }
@@ -95,8 +107,31 @@ public class KakaoSignupActivity extends Activity {
 //        editor.putBoolean("Guide",false);
         editor.apply();
 
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(intent);
-        finish();
+        Map<String, Object> user  = new HashMap<>();
+        user.put("UserName",nickname);
+        user.put("KakaoSerialNumber",id);
+        user.put("ProfileUrl",profile);
+        user.put("Point",0);
+
+        DB.collection("users").document(id)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //데이터 저장 성공
+                        Intent LoginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(LoginIntent);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //데이터 저장 실패
+                        Toast.makeText(getApplicationContext(), "DB저장에 실패하였습니다.\nDB 오류", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 }
