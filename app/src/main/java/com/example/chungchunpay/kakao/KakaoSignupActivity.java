@@ -14,7 +14,9 @@ import com.example.chungchunpay.activity.Login_Activity;
 import com.example.chungchunpay.activity.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
@@ -31,6 +33,12 @@ public class KakaoSignupActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        DB.setFirestoreSettings(settings);
+
         requestMe();
     }
 
@@ -112,6 +120,7 @@ public class KakaoSignupActivity extends Activity {
         user.put("KakaoSerialNumber",id);
         user.put("ProfileUrl",profile);
         user.put("Point",0);
+        user.put("created_at", FieldValue.serverTimestamp());
 
         DB.collection("users").document(id)
                 .set(user)

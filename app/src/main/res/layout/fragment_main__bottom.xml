@@ -66,17 +66,19 @@
         android:layout_marginTop="10dp"
         android:text="내 포인트"
         android:textColor="@color/light_gray"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
     <TextView
         android:id="@+id/PointText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
         android:text="100,000"
+        android:textColor="@color/white"
         android:textSize="12pt"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

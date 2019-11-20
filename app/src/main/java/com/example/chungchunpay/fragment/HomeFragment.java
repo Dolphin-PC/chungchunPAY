@@ -2,6 +2,7 @@ package com.example.chungchunpay.fragment;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,15 +24,18 @@ import com.example.chungchunpay.activity.PayActivity;
 
 import java.util.Random;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     ImageView MainImageView;
-    TextView NicknameText, AgeText, SexText, HobbyText;
+    TextView NicknameText, AgeText, GenderText, HobbyText;
     Button TourButton, PayButton;
     Boolean isActive = false;
+    String Nickname, Age,Gender, Hobby;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,19 +44,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences positionDATA = getActivity().getSharedPreferences("UserData",MODE_PRIVATE);
+        Nickname = positionDATA.getString("USERNAME","설정해주세요.");
+        Age = positionDATA.getString("AGE","설정해주세요.");
+        Gender = positionDATA.getString("GENDER","설정해주세요.");
+        Hobby = positionDATA.getString("HOBBY","설정해주세요.");
 
         MainImageView = view.findViewById(R.id.MainimageView);
         NicknameText = view.findViewById(R.id.NicknameText);
         AgeText = view.findViewById(R.id.AgeText);
-        SexText = view.findViewById(R.id.SexText);
+        GenderText = view.findViewById(R.id.GenderText);
         HobbyText = view.findViewById(R.id.HobbyText);
         TourButton = view.findViewById(R.id.TourButton);
         PayButton = view.findViewById(R.id.PayButton);
 
+        NicknameText.setText(Nickname);
+        AgeText.setText(Age);
+        GenderText.setText(Gender);
+        HobbyText.setText(Hobby);
+
+
         MainImageView.setOnClickListener(this);
         NicknameText.setOnClickListener(this);
         AgeText.setOnClickListener(this);
-        SexText.setOnClickListener(this);
+        GenderText.setOnClickListener(this);
         HobbyText.setOnClickListener(this);
         TourButton.setOnClickListener(this);
         PayButton.setOnClickListener(this);
@@ -76,10 +91,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 GIF(isActive);
                 break;
 
-            case R.id.NicknameText :
-            case R.id.AgeText :
-            case R.id.SexText :
-            case R.id.HobbyText :
+            case R.id.NicknameText : if(Nickname.equals("설정해주세요.")) break;
+            case R.id.AgeText :      if(Age.equals("설정해주세요.")) break;
+            case R.id.GenderText:    if(Gender.equals("설정해주세요.")) break;
+            case R.id.HobbyText :    if(Hobby.equals("설정해주세요.")) break;
                 ((MainActivity)getActivity()).showFragment(new SettingFragment());
                 break;
 

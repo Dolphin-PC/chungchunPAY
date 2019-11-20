@@ -10,10 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chungchunpay.FireCloud_Data.DataUser;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.fragment.CartFragment;
 import com.example.chungchunpay.fragment.HomeFragment;
@@ -30,19 +32,29 @@ import com.example.chungchunpay.menu.DrawerAdapter;
 import com.example.chungchunpay.menu.DrawerItem;
 import com.example.chungchunpay.menu.SimpleItem;
 import com.example.chungchunpay.menu.SpaceItem;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener{
     private static final String TAG = "MainActivity";
+    FirebaseFirestore FireDB = FirebaseFirestore.getInstance();
 
-    String UserName,Id,ProfileURL;
+
+    String UserName,ID,ProfileURL;
     private SlidingUpPanelLayout mLayout;
-    ImageView mainView;
+    TextView BottomNameText,BottomPointText,LeftDrawerPointText;
 
     private static final int POS_HOME = 0;
     private static final int POS_WALLET = 1;
@@ -59,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        FireDB.setFirestoreSettings(settings);
 
         init();
         slide_Root_Nav(savedInstanceState);
@@ -89,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 createItemFor(POS_LOGOUT)));
         adapter.setListener(this);
 
+        LeftDrawerPointText = findViewById(R.id.LeftDrawerPointText);
+
         RecyclerView list = findViewById(R.id.list);
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -108,20 +127,42 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //사용자 정보 불러오기(핸드폰 저장소에서)
-        SharedPreferences LoginData = getSharedPreferences("LoginDATA",MODE_PRIVATE);
+        SharedPreferences LoginData = getSharedPreferences("UserData",MODE_PRIVATE);
         UserName = LoginData.getString("USERNAME","");
-        Id = LoginData.getString("ID","");
+        ID = LoginData.getString("ID","");
         ProfileURL = LoginData.getString("PROFILE","");
 
-        //GIF
-//        mainView = findViewById(R.id.mainView);
-        /*GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(gif);
-        Glide.with(this).load(R.drawable.main).into(gifImage);*/
+        BottomNameText = findViewById(R.id.NameText);
+        BottomPointText = findViewById(R.id.PointText);
+
 
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
 
         SlidingUpPanel();
 
+        FirebaseDB();
+    }
+
+    void FirebaseDB(){
+        DocumentReference documentReference = FireDB.collection("users").document(ID);
+        documentReference.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Timestamp timestamp = documentSnapshot.getTimestamp("created_at");
+                        Date date = timestamp.toDate();
+
+                        DataUser dataUser = documentSnapshot.toObject(DataUser.class);
+                        LeftDrawerPointText.setText(dataUser.getPoint()+"");
+                        BottomPointText.setText(dataUser.getPoint()+"");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     void SlidingUpPanel(){
@@ -143,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/AgeText" />
 
     <TextView
-        android:id="@+id/SexText"
+        android:id="@+id/GenderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -135,7 +135,7 @@
         android:text="취미"
         android:textSize="12dp"
         app:layout_constraintStart_toEndOf="@+id/MainimageView"
-        app:layout_constraintTop_toBottomOf="@+id/SexText" />
+        app:layout_constraintTop_toBottomOf="@+id/GenderText" />
 
     <TextView
         android:id="@+id/HobbyText"
