@@ -26,7 +26,14 @@
         android:roundIcon="@mipmap/logo_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Dialog.MapDialog"></activity>
+        <activity android:name=".test.MapDialogImageTest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Dialog.MapDialog" />
         <activity
             android:name=".activity.PayActivity"
             android:theme="@style/Dark_AppTheme">
@@ -66,7 +73,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ArCameraActivity"></activity>
+        <activity android:name=".activity.ArCameraActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".slidingup" />
         <activity android:name=".kakao.KakaoSignupActivity" />
 

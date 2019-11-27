@@ -1,6 +1,7 @@
 package com.example.chungchunpay.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -273,15 +274,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void click(String MarkerName) {
-        StorageReference MarkerImageofMarkerName = TourImageRef.child(MarkerName);
+        StorageReference MarkerImageofMarkerName = TourImageRef.child(MarkerName+".jpg");
+        Log.e("map test",MarkerName);
+//        new MapDialog(MarkerImageofMarkerName);
         Glide.with(this)
                 .load(MarkerImageofMarkerName)
+                .placeholder(R.drawable.main)
                 .into(DialogImageView);
 
         DialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss(); //다이얼로그 종료
+            }
+        });
+        DialogImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),ArCameraActivity.class);
+                startActivity(intent);
             }
         });
     }
