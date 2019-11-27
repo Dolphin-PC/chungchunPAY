@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     FirebaseFirestore FireDB = FirebaseFirestore.getInstance();
 
 
-    String UserName,ID,ProfileURL;
+    String UserName,ID,ProfileURL,Gender,Hobby,Age;
     private SlidingUpPanelLayout mLayout;
     TextView BottomNameText,BottomPointText,LeftDrawerPointText;
 
@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SlidingUpPanel();
+        slide_Root_Nav(savedInstanceState);
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         FireDB.setFirestoreSettings(settings);
 
         init();
-        slide_Root_Nav(savedInstanceState);
 
     }
 
@@ -138,8 +139,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
 
-        SlidingUpPanel();
-
         FirebaseDB();
     }
 
@@ -155,6 +154,10 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                         DataUser dataUser = documentSnapshot.toObject(DataUser.class);
                         LeftDrawerPointText.setText(dataUser.getPoint()+"");
                         BottomPointText.setText(dataUser.getPoint()+"");
+                        BottomNameText.setText(dataUser.getUserName());
+                        Gender = dataUser.getGender();
+                        Age = dataUser.getAge();
+                        Hobby = dataUser.getHobby();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     }
 
     void SlidingUpPanel(){
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.activity_main);
+        mLayout = findViewById(R.id.activity_main);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+        mLayout.setPanelState(PanelState.EXPANDED);
 
     }
     @Override
@@ -260,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 break;
 
             case POS_SETTING :
-                showFragment(new SettingFragment());
+                showFragment(new SettingFragment(ID,UserName,Age,Gender,Hobby));
                 break;
 
             case POS_CART :

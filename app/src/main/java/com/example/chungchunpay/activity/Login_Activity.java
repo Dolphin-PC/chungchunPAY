@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.kakao.KakaoSignupActivity;
 import com.kakao.auth.ISessionCallback;
@@ -43,8 +42,8 @@ public class Login_Activity extends AppCompatActivity {
         FingerprintButton = findViewById(R.id.Loginfingerprint_Button);
 
         ImageView gif = findViewById(R.id.gif);
-        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(gif);
-        Glide.with(this).load(R.drawable.login).into(gifImage);
+
+        Glide.with(this).load(R.drawable.login).into(gif);
 
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);

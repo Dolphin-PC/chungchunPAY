@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MapActivity">
 
-
     <com.naver.maps.map.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
@@ -25,31 +24,83 @@
             android:layout_gravity="start|center"
             tools:layout_editor_absoluteX="355dp" />
 
+
+
+
     </com.naver.maps.map.MapView>
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="무엇을 찾아볼까요?" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
 
-    <View
-        android:id="@+id/view3"
+<!--    <ListView-->
+<!--        android:id="@+id/list_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
+
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:bmb_buttonEnum="textOutsideCircle"
+        app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
+        app:bmb_piecePlaceEnum="piecePlace_dot_9_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/MapListButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:text="목록" />
+
+        <EditText
+            android:id="@+id/SearchEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="무엇을 찾아볼까요?"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/SearchButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/main" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ProfileImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@drawable/user">
+
+        </androidx.appcompat.widget.AppCompatImageView>
+
+
+    </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

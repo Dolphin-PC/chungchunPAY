@@ -12,8 +12,12 @@ import androidx.annotation.Nullable;
 
 import com.example.chungchunpay.activity.Login_Activity;
 import com.example.chungchunpay.activity.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -75,7 +79,6 @@ public class KakaoSignupActivity extends Activity {
                 Log.e("Profile : ", id + "");
 
                 redirectMainActivity(nickname,id,profileImagePath);
-                //TODO : redirect to [mainActivity]
             }
 
             // 사용자 정보 요청 실패
@@ -115,32 +118,57 @@ public class KakaoSignupActivity extends Activity {
 //        editor.putBoolean("Guide",false);
         editor.apply();
 
-        Map<String, Object> user  = new HashMap<>();
-        user.put("UserName",nickname);
-        user.put("KakaoSerialNumber",id);
-        user.put("ProfileUrl",profile);
-        user.put("Point",0);
-        user.put("created_at", FieldValue.serverTimestamp());
-
-        DB.collection("users").document(id)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //데이터 저장 성공
+        DocumentReference documentReference = DB.collection("users").document(id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if(documentSnapshot.exists()){
+                        //데이터 존재
                         Intent LoginIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(LoginIntent);
                         finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //데이터 저장 실패
-                        Toast.makeText(getApplicationContext(), "DB저장에 실패하였습니다.\nDB 오류", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    }else{
+                        //데이터 존재하지 않음
 
+                        Map<String, Object> user  = new HashMap<>();
+                        user.put("UserName",nickname);
+                        user.put("KakaoSerialNumber",id);
+                        user.put("ProfileUrl",profile);
+                        user.put("Point",0);
+                        user.put("created_at", FieldValue.serverTimestamp());
+                        user.put("Hobby","설정해주세요.");
+                        user.put("Age","설정해주세요.");
+                        user.put("Gender","설정해주세요.");
+
+
+                        DB.collection("users").document(id)
+                                .set(user)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        //데이터 저장 성공
+                                        Intent LoginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(LoginIntent);
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        //데이터 저장 실패
+                                        Toast.makeText(getApplicationContext(), "DB저장에 실패하였습니다.\nDB 오류", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
+                    }
+                }else{
+                    //task fail
+                }
+            }
+        });
 
     }
 }

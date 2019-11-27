@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.activity.MainActivity;
 import com.example.chungchunpay.activity.MapActivity;
@@ -35,7 +34,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     TextView NicknameText, AgeText, GenderText, HobbyText;
     Button TourButton, PayButton;
     Boolean isActive = false;
-    String Nickname, Age,Gender, Hobby;
+    String Nickname, Age,Gender, Hobby,ID;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -45,6 +44,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences positionDATA = getActivity().getSharedPreferences("UserData",MODE_PRIVATE);
+        ID = positionDATA.getString("ID","");
         Nickname = positionDATA.getString("USERNAME","설정해주세요.");
         Age = positionDATA.getString("AGE","설정해주세요.");
         Gender = positionDATA.getString("GENDER","설정해주세요.");
@@ -91,11 +91,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 GIF(isActive);
                 break;
 
-            case R.id.NicknameText : if(Nickname.equals("설정해주세요.")) break;
-            case R.id.AgeText :      if(Age.equals("설정해주세요.")) break;
-            case R.id.GenderText:    if(Gender.equals("설정해주세요.")) break;
-            case R.id.HobbyText :    if(Hobby.equals("설정해주세요.")) break;
-                ((MainActivity)getActivity()).showFragment(new SettingFragment());
+            case R.id.NicknameText : if(!Nickname.equals("설정해주세요.")) break;
+            case R.id.AgeText :      if(!Age.equals("설정해주세요.")) break;
+            case R.id.GenderText:    if(!Gender.equals("설정해주세요.")) break;
+            case R.id.HobbyText :    if(!Hobby.equals("설정해주세요.")) break;
+                ((MainActivity)getActivity()).showFragment(new SettingFragment(ID,Nickname,Age,Gender,Hobby));
+                //TODO : 설정으로 넘어갔을 때, 사이드 메뉴 Active시키기
                 break;
 
             case R.id.TourButton :
@@ -114,26 +115,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     void GIF(Boolean isActive){
-        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(MainImageView);
 
         if(isActive) {
             Random random = new Random();
             int num = random.nextInt(3);
             switch (num) {
                 case 0:
-                    Glide.with(getActivity()).load(R.drawable.main1).into(gifImage);
+                    Glide.with(getActivity()).load(R.drawable.main1).into(MainImageView);
                     break;
                 case 1:
-                    Glide.with(getActivity()).load(R.drawable.main2).into(gifImage);
+                    Glide.with(getActivity()).load(R.drawable.main2).into(MainImageView);
                     break;
                 case 2:
-                    Glide.with(getActivity()).load(R.drawable.main3).into(gifImage);
+                    Glide.with(getActivity()).load(R.drawable.main3).into(MainImageView);
                     break;
 
             }
             this.isActive = false;
         }else{
-            Glide.with(getActivity()).load(R.drawable.main).into(gifImage);
+            Glide.with(getActivity()).load(R.drawable.main).into(MainImageView);
             this.isActive = true;
         }
 

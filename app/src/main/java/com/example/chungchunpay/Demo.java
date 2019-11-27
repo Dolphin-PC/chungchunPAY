@@ -1,52 +1,23 @@
-package com.example.chungchunpay.fragment;
-
+package com.example.chungchunpay;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import com.danielstone.materialaboutlibrary.ConvenienceBuilder;
-import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
-import com.example.chungchunpay.R;
+import com.danielstone.materialaboutlibrary.util.OpenSourceLicense;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+public class Demo {
 
-//TODO : Create a Setting Fragment
-public class SettingFragment extends MaterialAboutFragment {
-
-    String Name,ID,Gender,Age,Hobby;
-//    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
-    public SettingFragment(String ID, String UserName, String Age,String Gender, String Hobby) {
-        this.ID = ID;
-        this.Name = UserName;
-        this.Age = Age;
-        this.Gender = Gender;
-        this.Hobby = Hobby;
-        // Required empty public constructor
-    }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    protected MaterialAboutList getMaterialAboutList(final Context c) {
+    public static MaterialAboutList createMaterialAboutList(final Context c, final int colorIcon, final int theme,String ID) {
 
         MaterialAboutCard.Builder appCardBuilder = new MaterialAboutCard.Builder();
 
@@ -61,7 +32,7 @@ public class SettingFragment extends MaterialAboutFragment {
         appCardBuilder.addItem(ConvenienceBuilder.createVersionActionItem(c,
                 new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_information_outline)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18),
                 "Version",
                 false));
@@ -70,7 +41,7 @@ public class SettingFragment extends MaterialAboutFragment {
                 .text("Changelog")
                 .icon(new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_history)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18))
                 .setOnClickAction(ConvenienceBuilder.createWebViewDialogOnClickAction(c, "Releases", "https://github.com/DorPhin-pc/chungchunPAY", true, false))
                 .build());
@@ -81,41 +52,19 @@ public class SettingFragment extends MaterialAboutFragment {
 //        authorCardBuilder.titleColor(ContextCompat.getColor(c, R.color.colorAccent));
 
         UserInfoCardBuilder.addItem(new MaterialAboutActionItem.Builder()
-                .text(Name)
-                .subText(ID)
+                .text("Park chan young")
+                .subText("EC&H S/W Dev.")
                 .icon(new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_account)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18))
                 .build());
 
-        //TODO : UserInfo 설정 클릭 시, 설정 다이얼로그 창 표시
         UserInfoCardBuilder.addItem(new MaterialAboutActionItem.Builder()
-                .text("나이")
-                .subText(Age)
+                .text("Fork on GitHub")
                 .icon(new IconicsDrawable(c)
-                        .icon(CommunityMaterial.Icon.cmd_cake)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
-                        .sizeDp(18))
-                .setOnClickAction(ConvenienceBuilder.createWebsiteOnClickAction(c, Uri.parse("https://github.com/DorPhin-pc/chungchunPAY")))
-                .build());
-
-        UserInfoCardBuilder.addItem(new MaterialAboutActionItem.Builder()
-                .text("성별")
-                .subText(Gender)
-                .icon(new IconicsDrawable(c)
-                        .icon(CommunityMaterial.Icon.cmd_gender_male_female)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
-                        .sizeDp(18))
-                .setOnClickAction(ConvenienceBuilder.createWebsiteOnClickAction(c, Uri.parse("https://github.com/DorPhin-pc/chungchunPAY")))
-                .build());
-
-        UserInfoCardBuilder.addItem(new MaterialAboutActionItem.Builder()
-                .text("취미")
-                .subText(Hobby)
-                .icon(new IconicsDrawable(c)
-                        .icon(CommunityMaterial.Icon.cmd_history)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .icon(CommunityMaterial.Icon.cmd_github_circle)
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18))
                 .setOnClickAction(ConvenienceBuilder.createWebsiteOnClickAction(c, Uri.parse("https://github.com/DorPhin-pc/chungchunPAY")))
                 .build());
@@ -127,7 +76,7 @@ public class SettingFragment extends MaterialAboutFragment {
         convenienceCardBuilder.addItem(ConvenienceBuilder.createVersionActionItem(c,
                 new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_information_outline)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18),
                 "Version",
                 false));
@@ -145,7 +94,7 @@ public class SettingFragment extends MaterialAboutFragment {
         convenienceCardBuilder.addItem(ConvenienceBuilder.createRateActionItem(c,
                 new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_star)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18),
                 "Rate this app",
                 null
@@ -154,26 +103,26 @@ public class SettingFragment extends MaterialAboutFragment {
         convenienceCardBuilder.addItem(ConvenienceBuilder.createEmailItem(c,
                 new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_email)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18),
                 "Send an email",
                 true,
                 "pcx474@gmail.com",
                 "Question about 팔도강산 멍무이"));
 
-//        convenienceCardBuilder.addItem(ConvenienceBuilder.createPhoneItem(c,
-//                new IconicsDrawable(c)
-//                        .icon(CommunityMaterial.Icon.cmd_phone)
-//                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
-//                        .sizeDp(18),
-//                "Call me",
-//                true,
-//                "+82 10 1234 5678"));
+        convenienceCardBuilder.addItem(ConvenienceBuilder.createPhoneItem(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_phone)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "Call me",
+                true,
+                "+82 10 1234 5678"));
 
         convenienceCardBuilder.addItem(ConvenienceBuilder.createMapItem(c,
                 new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_map)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18),
                 "Visit 춘천",
                 null,
@@ -187,7 +136,7 @@ public class SettingFragment extends MaterialAboutFragment {
         LicenseCardBuilder.addItem(new MaterialAboutActionItem.Builder()
                 .icon(new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_check)
-                        .color(ContextCompat.getColor(c, R.color.mal_color_icon_dark_theme))
+                        .color(ContextCompat.getColor(c, colorIcon))
                         .sizeDp(18))
                 .text("Copyright 2019 by EC&H")
                 .subTextHtml("본 서비스의 저작권은 EC&H에게 있으며,<br>" +
@@ -200,9 +149,52 @@ public class SettingFragment extends MaterialAboutFragment {
         return new MaterialAboutList(appCardBuilder.build(), UserInfoCardBuilder.build(), convenienceCardBuilder.build(), LicenseCardBuilder.build());
     }
 
+    public static MaterialAboutList createMaterialAboutLicenseList(final Context c, int colorIcon) {
 
-    @Override
-    protected int getTheme() {
-        return R.style.AppTheme_MaterialAboutActivity_Fragment;
+        MaterialAboutCard materialAboutLIbraryLicenseCard = ConvenienceBuilder.createLicenseCard(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_book)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "material-about-library", "2016", "Daniel Stone",
+                OpenSourceLicense.APACHE_2);
+
+        MaterialAboutCard androidIconicsLicenseCard = ConvenienceBuilder.createLicenseCard(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_book)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "Android Iconics", "2016", "Mike Penz",
+                OpenSourceLicense.APACHE_2);
+
+        MaterialAboutCard leakCanaryLicenseCard = ConvenienceBuilder.createLicenseCard(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_book)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "LeakCanary", "2015", "Square, Inc",
+                OpenSourceLicense.APACHE_2);
+
+        MaterialAboutCard mitLicenseCard = ConvenienceBuilder.createLicenseCard(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_book)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "MIT Example", "2017", "Matthew Ian Thomson",
+                OpenSourceLicense.MIT);
+
+        MaterialAboutCard gplLicenseCard = ConvenienceBuilder.createLicenseCard(c,
+                new IconicsDrawable(c)
+                        .icon(CommunityMaterial.Icon.cmd_book)
+                        .color(ContextCompat.getColor(c, colorIcon))
+                        .sizeDp(18),
+                "GPL Example", "2017", "George Perry Lindsay",
+                OpenSourceLicense.GNU_GPL_3);
+
+        return new MaterialAboutList(materialAboutLIbraryLicenseCard,
+                androidIconicsLicenseCard,
+                leakCanaryLicenseCard,
+                mitLicenseCard,
+                gplLicenseCard);
     }
 }

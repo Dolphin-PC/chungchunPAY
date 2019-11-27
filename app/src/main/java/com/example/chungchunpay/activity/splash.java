@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.chungchunpay.R;
 
 public class splash extends Activity {
@@ -18,8 +17,7 @@ public class splash extends Activity {
         setContentView(R.layout.splash);
 
         ImageView gif = findViewById(R.id.loading_gif);
-        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(gif);
-        Glide.with(this).load(R.drawable.loading).into(gifImage);
+        Glide.with(this).load(R.drawable.loading).into(gif);
 
         Loading();
     }

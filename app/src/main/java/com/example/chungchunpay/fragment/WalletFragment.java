@@ -1,6 +1,7 @@
 package com.example.chungchunpay.fragment;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +20,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.TestStackAdapter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.loopeer.cardstack.AllMoveDownAnimatorAdapter;
 import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.UpDownAnimatorAdapter;
@@ -25,10 +29,14 @@ import com.loopeer.cardstack.UpDownStackAnimatorAdapter;
 
 import java.util.Arrays;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment implements CardStackView.ItemExpendListener{
+    FirebaseFirestore FireDB = FirebaseFirestore.getInstance();
+
     public static Integer[] TEST_DATAS = new Integer[]{
             R.color.color_1,
             R.color.color_2,
@@ -41,6 +49,8 @@ public class WalletFragment extends Fragment implements CardStackView.ItemExpend
     LinearLayout mActionButtonContainer;
     TestStackAdapter mTestStackAdapter;
     Button PreButton,NextButton;
+    String UserName,ID,ProfileURL;
+    TextView NameText;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -49,6 +59,12 @@ public class WalletFragment extends Fragment implements CardStackView.ItemExpend
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences LoginData = getActivity().getSharedPreferences("UserData",MODE_PRIVATE);
+        UserName = LoginData.getString("USERNAME","");
+        ID = LoginData.getString("ID","");
+        ProfileURL = LoginData.getString("PROFILE","");
+
+        NameText = view.findViewById(R.id.NameText);
         cardStackView = view.findViewById(R.id.CardStackView);
         mActionButtonContainer = view.findViewById(R.id.button_container);
         PreButton = view.findViewById(R.id.PreButton);
@@ -58,6 +74,14 @@ public class WalletFragment extends Fragment implements CardStackView.ItemExpend
         mTestStackAdapter = new TestStackAdapter(getContext());
         cardStackView.setAdapter(mTestStackAdapter);
 
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        FireDB.setFirestoreSettings(settings);
+
+        NameText.setText(UserName + "님");
+
+        mActionButtonContainer.setVisibility(View.INVISIBLE);
         PreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +101,7 @@ public class WalletFragment extends Fragment implements CardStackView.ItemExpend
                     @Override
                     public void run() {
                         mTestStackAdapter.updateData(Arrays.asList(TEST_DATAS));
+
                     }
                 }
                 , 200
