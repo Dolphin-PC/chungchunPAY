@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.PayButton :
+                //TODO : 보안 비밀번호 or 지문 인증 구현
                 Go_Intent(new Intent(getActivity(), PayActivity.class));
                 break;
 

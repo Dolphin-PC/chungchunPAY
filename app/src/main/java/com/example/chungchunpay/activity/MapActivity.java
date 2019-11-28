@@ -2,33 +2,42 @@ package com.example.chungchunpay.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.chungchunpay.CaptureForm;
 import com.example.chungchunpay.FireCloud_Data.DataMap;
 import com.example.chungchunpay.NaverJSON;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.menu.BoomMenuBuilderManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
@@ -57,6 +66,7 @@ import java.util.HashMap;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore FirebaseDB = FirebaseFirestore.getInstance();
+    private StorageReference ImageStorageRef;
 
     public StorageReference StorageRef = FirebaseStorage.getInstance().getReference();
     public StorageReference TourImageRef = StorageRef.child("맵/tour");
@@ -70,9 +80,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     EditText SearchEditText;
-    Button MapListButton,SearchButton, DialogButton;
-    ImageView ProfileImageView ,DialogImageView;
-    TextView DialogTitleText;
+    Button MapListButton,SearchButton, MapDialogButton, MungMuiDialogButton;
+    ImageView ProfileImageView , MapDialogImage ,MungMuiDialogImage;
+    TextView Map_DialogText, MungMuiDialogNameText, MungMuiDialogFindORHaveText, MungMuiTitleText;
+    String ID;
 
     //Naver 지도 검색
     String latitude = "37.898943";
@@ -93,9 +104,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     Marker[] markers = new Marker[10];
     Marker marker = new Marker();
 
-    Dialog dialog;
-    String MarkerName;
+    Dialog MarkerDialog, MungMuiDialog;
+    String MarkerName,MungMuiName;
 
+    private IntentIntegrator qrScan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,14 +117,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
 
-        SearchEditText = findViewById(R.id.SearchEditText);
-        MapListButton = findViewById(R.id.MapListButton);
-        SearchButton = findViewById(R.id.SearchButton);
-        ProfileImageView = findViewById(R.id.ProfileImageView);
-
-
         BoomMenu();
-
 
         //현재 내 위치
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
@@ -188,6 +193,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void init() {
+        SharedPreferences positionDATA = getSharedPreferences("UserData",MODE_PRIVATE);
+        ID = positionDATA.getString("ID","");
+
+        SearchEditText = findViewById(R.id.SearchEditText);
+        MapListButton = findViewById(R.id.MapListButton);
+        SearchButton = findViewById(R.id.SearchButton);
+        ProfileImageView = findViewById(R.id.ProfileImageView);
+
         NaverMap_API_JSON = "\"https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=";
         NaverMap_API_JSON += SearchKeyword + "&coordinate=";
         NaverMap_API_JSON += SearchPosition + "\" \\\n\t-H \"X-NCP-APIGW-API-KEY-ID: {";
@@ -247,16 +260,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 infoWindow.setOnClickListener(new Overlay.OnClickListener() {
                                     @Override
                                     public boolean onClick(@NonNull Overlay overlay) {
-                                        dialog = new Dialog(MapActivity.this);
-                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                        dialog.setContentView(R.layout.activity_map_dialog);
-                                        dialog.show();
+                                        MarkerDialog = new Dialog(MapActivity.this);
+//                                        MarkerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        MarkerDialog.setContentView(R.layout.activity_map_dialog);
+                                        MarkerDialog.show();
 
-                                        DialogTitleText = dialog.findViewById(R.id.Dialog_TitleText);
-                                        DialogImageView = dialog.findViewById(R.id.Dialog_ImageView);
-                                        DialogButton = dialog.findViewById(R.id.Dialog_Button);
+                                        Map_DialogText = MarkerDialog.findViewById(R.id.Dialog_TitleText);
+                                        MapDialogImage = MarkerDialog.findViewById(R.id.Dialog_ImageView);
+                                        MapDialogButton = MarkerDialog.findViewById(R.id.Dialog_Button);
                                         click(MarkerName);
-                                        DialogTitleText.setText(MarkerName);
+                                        Map_DialogText.setText(MarkerName);
                                         return true;
                                     }
                                 });
@@ -275,24 +288,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     void click(String MarkerName) {
         StorageReference MarkerImageofMarkerName = TourImageRef.child(MarkerName+".jpg");
-        Log.e("map test",MarkerName);
 //        new MapDialog(MarkerImageofMarkerName);
-        Glide.with(this)
-                .load(MarkerImageofMarkerName)
-                .placeholder(R.drawable.main)
-                .into(DialogImageView);
 
-        DialogButton.setOnClickListener(new View.OnClickListener() {
+        MarkerImageofMarkerName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onClick(View view) {
-                dialog.dismiss(); //다이얼로그 종료
+            public void onSuccess(Uri uri) {
+                Glide.with(MapActivity.this)
+                        .load(uri)
+                        .placeholder(R.drawable.loading)
+                        .into(MapDialogImage);
             }
         });
-        DialogImageView.setOnClickListener(new View.OnClickListener() {
+
+        MapDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),ArCameraActivity.class);
-                startActivity(intent);
+                MarkerDialog.dismiss(); //다이얼로그 종료
+            }
+        });
+        MapDialogImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                qrScan = new IntentIntegrator(MapActivity.this);
+                qrScan.setCaptureActivity(CaptureForm.class);
+                qrScan.setOrientationLocked(false); // default가 세로모드인데 휴대폰 방향에 따라 가로, 세로로 자동 변경됩니다.
+                qrScan.setPrompt("'" + MarkerName + "'\n" + "QR코드를 인식해주세요!");
+                qrScan.initiateScan();
             }
         });
     }
@@ -313,8 +334,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     case 4 : Map_DB("gs",naverMap); break;
                     case 5 : Map_DB("bank",naverMap); break;
                 }
-
-
             }
 
             @Override
@@ -354,13 +373,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 infoWindow.close();
             }
         });
-
-
-
-
-
-
-
     }
 
     @Override protected void onStart() { super.onStart();mapView.onStart(); }
@@ -379,5 +391,126 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "QR 코드 인식에 실패하였습니다.", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                MarkerDialog.dismiss();
+                MungMui(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    void MungMui(String ScanTag){
+        String TagName,TagUri;
+        TagName = ScanTag.split("/")[0];
+        TagUri = ScanTag.split("/")[1];
+        MungMuiDialog = new Dialog(MapActivity.this);
+        MungMuiDialog.setContentView(R.layout.activity_mung_mui_dialog);
+        MungMuiDialog.show();
+
+        MungMuiTitleText = MungMuiDialog.findViewById(R.id.TItleText);
+        MungMuiDialogImage = MungMuiDialog.findViewById(R.id.MungMuiImageView);
+        MungMuiDialogNameText = MungMuiDialog.findViewById(R.id.GifNameText);
+        MungMuiDialogFindORHaveText = MungMuiDialog.findViewById(R.id.FindORHaveText);
+        MungMuiDialogButton = MungMuiDialog.findViewById(R.id.OkButton);
+
+        ImageStorageRef = FirebaseStorage.getInstance().getReference().child("멍무이");
+
+        MungMuiTitleText.setText(TagName);
+
+        ImageStorageRef.child(TagUri+".gif").getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(MapActivity.this)
+                        .load(uri)
+                        .placeholder(R.drawable.loading)
+                        .into(MungMuiDialogImage);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //Scan한 태그의 이름이 FireStorage내에 없음_DB오류
+            }
+        });
+
+        FirebaseDB.collection("map").document("춘천").collection("tour").document(TagName)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        DataMap dataMap = documentSnapshot.toObject(DataMap.class);
+                        MungMuiName = dataMap.getMungMuiName();
+                        MungMuiDialogNameText.setText(MungMuiName);
+                    }
+                });
+
+        FirebaseDB.collection("user_have").document(ID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot.exists()){
+                                if(documentSnapshot.getId().equals(ScanTag)){
+                                    //데이터를 가지고 있을때
+                                    MungMuiDialogFindORHaveText.setText("이미 가지고 있는 멍무이입니다.");
+                                    MungMuiDialogButton.setText("확인");
+                                }else{
+                                    //데이터를 가지고 있지 않을때
+                                    MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
+                                    MungMuiDialogButton.setText("획득");
+                                }
+                            }else{
+                                //데이터를 하나도 가지고 있지 않을때
+                                MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
+                                MungMuiDialogButton.setText("획득");
+                            }
+                        }
+                    }
+                });
+
+        MungMuiDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(MungMuiDialogButton.getText().toString().equals("확인")) MungMuiDialog.dismiss();
+                else {
+                    MungMuiGetEvent(TagName,MungMuiName);
+                }
+            }
+        });
+    }
+
+    void MungMuiGetEvent(String TagName,String MungmuiName){
+        HashMap<String, Object> UserHaveMap = new HashMap<>();
+        UserHaveMap.put(TagName,MungmuiName);
+
+        FirebaseDB.collection("user_have").document(ID).collection("have_mungmui")
+                .add(UserHaveMap)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(MapActivity.this,"<" + MungmuiName + ">를(을) 획득하였습니다!",Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapActivity.this,"<" + MungmuiName + ">를(을) 획득에 실패하였습니다...",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+    }
 
 }

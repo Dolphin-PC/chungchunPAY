@@ -130,7 +130,7 @@ public class KakaoSignupActivity extends Activity {
                         startActivity(LoginIntent);
                         finish();
                     }else{
-                        //데이터 존재하지 않음
+                        //데이터 존재하지 않음(유저 데이터 초기 설정)
 
                         Map<String, Object> user  = new HashMap<>();
                         user.put("UserName",nickname);
@@ -141,7 +141,6 @@ public class KakaoSignupActivity extends Activity {
                         user.put("Hobby","설정해주세요.");
                         user.put("Age","설정해주세요.");
                         user.put("Gender","설정해주세요.");
-
 
                         DB.collection("users").document(id)
                                 .set(user)
@@ -161,8 +160,6 @@ public class KakaoSignupActivity extends Activity {
                                         Toast.makeText(getApplicationContext(), "DB저장에 실패하였습니다.\nDB 오류", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
-
                     }
                 }else{
                     //task fail

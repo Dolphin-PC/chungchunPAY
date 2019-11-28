@@ -27,17 +27,11 @@
         android:roundIcon="@mipmap/logo_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ScanActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Dialog.MungMuiDialog"></activity>
         <activity
             android:name=".CaptureForm"
             android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation"/>
+            tools:replace="screenOrientation" />
         <activity android:name=".test.MapDialogImageTest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
