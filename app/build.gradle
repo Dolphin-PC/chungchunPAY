@@ -92,16 +92,7 @@ dependencies {
 
     //Boom Menu
     implementation 'com.nightonke:boommenu:2.1.1'
+
+    //QR
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 }
-
-
-sceneform.asset('sampleData/video_screen.obj',
-        'sampleData/material.mat',
-        'sampleData/video_screen.sfa',
-        'src/main/assets/video_screen')
-
-
-sceneform.asset('sampleData/Mesh_Cat.obj',
-        'default',
-        'sampleData/Mesh_Cat.sfa',
-        'src/main/assets/Mesh_Cat')
