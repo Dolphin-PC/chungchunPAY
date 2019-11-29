@@ -13,4 +13,9 @@
         app:srcCompat="@drawable/main"
         tools:layout_editor_absoluteX="-43dp"
         tools:layout_editor_absoluteY="-64dp" />
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewKonfetti"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

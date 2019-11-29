@@ -95,4 +95,7 @@ dependencies {
 
     //QR
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+
+    //Konfetti_Celebrate
+    implementation 'nl.dionsegijn:konfetti:1.1.3'
 }

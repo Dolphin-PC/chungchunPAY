@@ -3,6 +3,7 @@ package com.example.chungchunpay.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.chungchunpay.CaptureForm;
 import com.example.chungchunpay.FireCloud_Data.DataMap;
+import com.example.chungchunpay.FireCloud_Data.DataTourMungMui;
 import com.example.chungchunpay.NaverJSON;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.menu.BoomMenuBuilderManager;
@@ -63,6 +65,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore FirebaseDB = FirebaseFirestore.getInstance();
@@ -195,6 +201,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     void init() {
         SharedPreferences positionDATA = getSharedPreferences("UserData",MODE_PRIVATE);
         ID = positionDATA.getString("ID","");
+        Log.e("test",ID);
 
         SearchEditText = findViewById(R.id.SearchEditText);
         MapListButton = findViewById(R.id.MapListButton);
@@ -399,7 +406,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Toast.makeText(this, "QR 코드 인식에 실패하였습니다.", Toast.LENGTH_LONG).show();
 
             } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                 MarkerDialog.dismiss();
                 MungMui(result.getContents());
             }
@@ -454,31 +461,48 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
-        FirebaseDB.collection("user_have").document(ID)
+        FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if(documentSnapshot.exists()){
-                                if(documentSnapshot.getId().equals(ScanTag)){
+                            for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
+                                DataTourMungMui dataTourMungMui = queryDocumentSnapshot.toObject(DataTourMungMui.class);
+                                if(dataTourMungMui.getMungMuiName().equals(MungMuiName)){
                                     //데이터를 가지고 있을때
                                     MungMuiDialogFindORHaveText.setText("이미 가지고 있는 멍무이입니다.");
                                     MungMuiDialogButton.setText("확인");
+                                    break;
                                 }else{
                                     //데이터를 가지고 있지 않을때
                                     MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
                                     MungMuiDialogButton.setText("획득");
                                 }
-                            }else{
-                                //데이터를 하나도 가지고 있지 않을때
-                                MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
-                                MungMuiDialogButton.setText("획득");
                             }
                         }
                     }
                 });
+
+         /*
+        if(task.isSuccessful()){
+            DocumentSnapshot documentSnapshot = task.getResult();
+            if(documentSnapshot.exists()){
+                if(documentSnapshot.getId().equals(ScanTag)){
+                    //데이터를 가지고 있을때
+                    MungMuiDialogFindORHaveText.setText("이미 가지고 있는 멍무이입니다.");
+                    MungMuiDialogButton.setText("확인");
+                }else{
+                    //데이터를 가지고 있지 않을때
+                    MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
+                    MungMuiDialogButton.setText("획득");
+                }
+            }else{
+                //데이터를 하나도 가지고 있지 않을때
+                MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
+                MungMuiDialogButton.setText("획득");
+            }
+        }*/
 
         MungMuiDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -492,15 +516,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void MungMuiGetEvent(String TagName,String MungmuiName){
-        HashMap<String, Object> UserHaveMap = new HashMap<>();
-        UserHaveMap.put(TagName,MungmuiName);
+        KonfettiView konfettiView = findViewById(R.id.viewKonfetti);
 
-        FirebaseDB.collection("user_have").document(ID).collection("have_mungmui")
+        HashMap<String, Object> UserHaveMap = new HashMap<>();
+        UserHaveMap.put("MungMuiName",MungmuiName);
+        UserHaveMap.put("PointName",TagName);
+
+        FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .add(UserHaveMap)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(MapActivity.this,"<" + MungmuiName + ">를(을) 획득하였습니다!",Toast.LENGTH_LONG).show();
+                        konfettiView.build()
+                                .addColors(Color.YELLOW,Color.GREEN,Color.MAGENTA)
+                                .setDirection(0.0,359.0)
+                                .setSpeed(1f,5f)
+                                .setFadeOutEnabled(true)
+                                .setTimeToLive(1200L)
+                                .addShapes(Shape.RECT,Shape.CIRCLE)
+                                .addSizes(new Size(12, 5f))
+                                .setPosition(-50f,konfettiView.getWidth() + 50f,-50f,-50f)
+                                .streamFor(300,5000L);
+                        MungMuiDialog.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
