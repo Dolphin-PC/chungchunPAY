@@ -98,4 +98,8 @@ dependencies {
 
     //Konfetti_Celebrate
     implementation 'nl.dionsegijn:konfetti:1.1.3'
+
+    //DicreteView
+    implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
+    implementation 'com.yarolegovich:mp:1.0.9'
 }

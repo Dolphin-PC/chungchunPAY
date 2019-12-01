@@ -89,7 +89,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     Button MapListButton,SearchButton, MapDialogButton, MungMuiDialogButton;
     ImageView ProfileImageView , MapDialogImage ,MungMuiDialogImage;
     TextView Map_DialogText, MungMuiDialogNameText, MungMuiDialogFindORHaveText, MungMuiTitleText;
-    String ID;
+    String ID, ImageUrl;
 
     //Naver 지도 검색
     String latitude = "37.898943";
@@ -437,6 +437,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
+                ImageUrl = uri+"";
                 Glide.with(MapActivity.this)
                         .load(uri)
                         .placeholder(R.drawable.loading)
@@ -484,26 +485,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
-         /*
-        if(task.isSuccessful()){
-            DocumentSnapshot documentSnapshot = task.getResult();
-            if(documentSnapshot.exists()){
-                if(documentSnapshot.getId().equals(ScanTag)){
-                    //데이터를 가지고 있을때
-                    MungMuiDialogFindORHaveText.setText("이미 가지고 있는 멍무이입니다.");
-                    MungMuiDialogButton.setText("확인");
-                }else{
-                    //데이터를 가지고 있지 않을때
-                    MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
-                    MungMuiDialogButton.setText("획득");
-                }
-            }else{
-                //데이터를 하나도 가지고 있지 않을때
-                MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
-                MungMuiDialogButton.setText("획득");
-            }
-        }*/
-
         MungMuiDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -516,17 +497,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void MungMuiGetEvent(String TagName,String MungmuiName){
+        SharedPreferences positionDATA = getSharedPreferences("MungMuiData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = positionDATA.edit();
+
         KonfettiView konfettiView = findViewById(R.id.viewKonfetti);
 
         HashMap<String, Object> UserHaveMap = new HashMap<>();
         UserHaveMap.put("MungMuiName",MungmuiName);
         UserHaveMap.put("PointName",TagName);
+        UserHaveMap.put("ImageUrl",ImageUrl);
 
         FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .add(UserHaveMap)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        editor.putString(MungmuiName,ImageUrl).apply();
                         Toast.makeText(MapActivity.this,"<" + MungmuiName + ">를(을) 획득하였습니다!",Toast.LENGTH_LONG).show();
                         konfettiView.build()
                                 .addColors(Color.YELLOW,Color.GREEN,Color.MAGENTA)

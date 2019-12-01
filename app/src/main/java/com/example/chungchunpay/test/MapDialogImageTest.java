@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.chungchunpay.R;
+import com.example.chungchunpay.cart.CardData;
+import com.example.chungchunpay.cart.Item;
+import com.example.chungchunpay.cart.ShopAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +25,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
+
+import java.util.List;
 
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
@@ -29,26 +35,40 @@ import nl.dionsegijn.konfetti.models.Size;
 
 
 public class MapDialogImageTest extends AppCompatActivity {
+
     //TODO : firebase storage
     private StorageReference mStorageRef;
     FirebaseFirestore firebaseFirestore;
+    List<Item> data;
+    Uri DBuri;
 
+    ShopAdapter shopAdapter = new ShopAdapter();
+    CardData cardData = new CardData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_dialog_image_test);
 
+        DiscreteScrollView scrollView = findViewById(R.id.picker);
+
+
+        cardData.setItems("test","test","https://firebasestorage.googleapis.com/v0/b/chungchunpay.appspot.com/o/Soyang_River_Virgin_Award.gif?alt=media&token=29af9daa-c15e-47f6-aa6c-531ea1e2931e");
+        cardData.setItems("test","test","https://firebasestorage.googleapis.com/v0/b/chungchunpay.appspot.com/o/Soyang_River_Virgin_Award.gif?alt=media&token=29af9daa-c15e-47f6-aa6c-531ea1e2931e");
+
+        scrollView.setAdapter(shopAdapter);
+        shopAdapter.setItems(cardData.getItems());
+
 //        storageTest();
 //        CelebrateTest();
-        DatabaseTest();
+//        DatabaseTest();
+//        DiscreteTest();
     }
     void storageTest(){
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("멍무이");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        StorageReference imagesRef = mStorageRef.child("test1.gif");
+        StorageReference imagesRef = mStorageRef.child("Soyang_River_Virgin_Award.gif");
 
-
-        ImageView imageView = findViewById(R.id.imageView3);
+        ImageView imageView = findViewById(R.id.testImage);
 
 //        Glide.with(this).load(imagesRef).placeholder(R.drawable.main).into(imageView);
         imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -130,5 +150,31 @@ public class MapDialogImageTest extends AppCompatActivity {
                 });
     }
 
+    /*void DiscreteTest(){
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        StorageReference imagesRef = mStorageRef.child("Soyang_River_Virgin_Award.gif");
+
+        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.e("test",uri+"");
+                DBuri = uri;
+//                data.add(new Item(4,"test","Test",uri));
+            }
+        });
+        data = Arrays.asList(
+//                new Item(1, "Everyday Candle", "$12.00 USD", R.drawable.main1),
+//                new Item(2, "Small Porcelain Bowl", "$50.00 USD", R.drawable.main2),
+//                new Item(3, "Favourite Board", "$265.00 USD", R.drawable.main3),
+                new Item(1,"test","test",DBuri));
+
+
+        DiscreteScrollView scrollView = findViewById(R.id.picker);
+        scrollView.setAdapter(shopAdapter);
+        shopAdapter.setItems(new CardData(DBuri).getItems());
+    }*/
+
 }
+
 

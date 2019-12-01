@@ -81,5 +81,10 @@
     <string name="text_inside_circle_button_text_gs">편의점</string>
     <string name="text_inside_circle_button_text_bank">은행</string>
 
+    <string name="pref_key_transition_time" translatable="false">pref_key_transition_time</string>
+    <string name="msg_unsupported_op">Unsupported operation</string>
+    <string name="btn_smooth_scroll">Smooth scroll</string>
+    <string name="btn_transition_time">Transition time</string>
+
 
 </resources>

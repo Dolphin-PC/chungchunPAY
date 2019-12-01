@@ -7,12 +7,18 @@
     tools:context=".test.MapDialogImageTest">
 
     <ImageView
-        android:id="@+id/imageView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/main"
-        tools:layout_editor_absoluteX="-43dp"
-        tools:layout_editor_absoluteY="-64dp" />
+        android:id="@+id/testImage">
+
+    </ImageView>
+    <com.yarolegovich.discretescrollview.DiscreteScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/picker"
+        android:orientation="vertical">
+
+    </com.yarolegovich.discretescrollview.DiscreteScrollView>
 
     <nl.dionsegijn.konfetti.KonfettiView
         android:layout_width="match_parent"
