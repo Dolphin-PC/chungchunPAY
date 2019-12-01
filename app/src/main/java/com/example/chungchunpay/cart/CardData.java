@@ -15,14 +15,16 @@ public class CardData {
         this.imageurl = imageurl;
     }
 
+
+
     public void setItems(String name, String text, String imageurl){
         items.add(new Item(1,name,text,imageurl));
     }
     public ArrayList<Item> getItems() {
         return items;
     }
-    public String getName(){
-        return name;
+    public String getName(int position){
+        return items.get(position).getName();
     }
 
     public String getImageurl() {

@@ -67,6 +67,7 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
         Map<String,?> ImageUrls = positionDATA.getAll();
 
         currentItemName = view.findViewById(R.id.NameText);
+        currentItemName.setText("<>");
 
         for(Map.Entry<String,?> entry : ImageUrls.entrySet()){
             cardData.setItems(
@@ -79,15 +80,14 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
         itemPicker = view.findViewById(R.id.picker);
 
         itemPicker.setAdapter(shopAdapter);
+        itemPicker.addOnItemChangedListener(this);
         shopAdapter.setItems(cardData.getItems());
 
     }
 
     @Override
     public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int i) {
-        onItemChanged(cardData);
+        currentItemName.setText("<" + cardData.getName(i) + ">");
     }
-    private void onItemChanged(CardData cardData) {
-        currentItemName.setText(cardData.getName());
-    }
+
 }

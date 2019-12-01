@@ -462,6 +462,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
+        //데이터를 가지고 있지 않을때
+        MungMuiDialogFindORHaveText.setText("새로운 멍무이를 획득하시려면\n'획득'버튼을 눌러주세요!");
+        MungMuiDialogButton.setText("획득");
         FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
