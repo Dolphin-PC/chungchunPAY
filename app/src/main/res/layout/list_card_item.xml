@@ -16,10 +16,21 @@
         android:background="@drawable/shape_rectangle_with_radius">
 
         <TextView
-            android:id="@+id/text_list_card_title"
+            android:id="@+id/CardNumberText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            tools:text="12"/>
+
+        <TextView
+            android:id="@+id/CardTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="80dp"
             android:textColor="@android:color/white"
             android:textSize="40sp"
             android:textStyle="bold"
@@ -33,6 +44,7 @@
         android:animateLayoutChanges="true">
 
         <TextView
+            android:id="@+id/CardText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"

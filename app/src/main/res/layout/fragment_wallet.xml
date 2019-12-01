@@ -86,22 +86,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline9">
+        app:layout_constraintTop_toBottomOf="@+id/view4">
 
         <Button
             android:id="@+id/PreButton"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="@drawable/up_arrow" />
+
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pre" />
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/NextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next" />
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="@drawable/down_arrow" />
 
     </LinearLayout>
 

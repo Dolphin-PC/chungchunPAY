@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 break;
 
             case POS_SETTING :
-                showFragment(new SettingFragment(ID,UserName,Age,Gender,Hobby));
+                showFragment(new SettingFragment());
                 break;
 
             case POS_CART :

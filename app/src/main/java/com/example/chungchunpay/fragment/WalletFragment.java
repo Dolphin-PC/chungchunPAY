@@ -101,7 +101,6 @@ public class WalletFragment extends Fragment implements CardStackView.ItemExpend
                     @Override
                     public void run() {
                         mTestStackAdapter.updateData(Arrays.asList(TEST_DATAS));
-
                     }
                 }
                 , 200

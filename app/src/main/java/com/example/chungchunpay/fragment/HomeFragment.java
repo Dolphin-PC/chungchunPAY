@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.AgeText :      if(!Age.equals("설정해주세요.")) break;
             case R.id.GenderText:    if(!Gender.equals("설정해주세요.")) break;
             case R.id.HobbyText :    if(!Hobby.equals("설정해주세요.")) break;
-                ((MainActivity)getActivity()).showFragment(new SettingFragment(ID,Nickname,Age,Gender,Hobby));
+                ((MainActivity)getActivity()).showFragment(new SettingFragment());
                 //TODO : 설정으로 넘어갔을 때, 사이드 메뉴 Active시키기
                 break;
 

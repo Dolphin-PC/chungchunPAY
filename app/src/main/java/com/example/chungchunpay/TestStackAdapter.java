@@ -36,6 +36,8 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     @Override
     protected CardStackView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
         View view;
+        TextView textView,CardTitleText;
+
         switch (viewType) {
             case R.layout.list_card_item_larger_header:
                 view = getLayoutInflater().inflate(R.layout.list_card_item_larger_header, parent, false);
@@ -63,14 +65,15 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle,TextView,CardTitleText;
+        TextView CardNumberText,CardTitleText,CardText;
 
         public ColorItemViewHolder(View view) {
             super(view);
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
-            mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
-            TextView = view.findViewById(R.id.text_view);
+            CardNumberText = (TextView) view.findViewById(R.id.CardNumberText);
+            CardTitleText = view.findViewById(R.id.CardTitleText);
+            CardText = view.findViewById(R.id.CardText);
         }
 
         @Override
@@ -80,22 +83,43 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, int position) {
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
-            mTextTitle.setText(String.valueOf(position));
-
+            CardNumberText.setText(String.valueOf(position));
+            switch (position){
+                case 0 :
+                    CardTitleText.setText("춘천사랑상품권");
+                    CardText.setText("춘천사랑상품권은 '강원도 춘천시'에서 발행하고 사용할 수 있는 상품권입니다.");
+                    break;
+                case 1 :
+                    CardTitleText.setText("강원사랑상품권");
+                    CardText.setText("강원사랑상품권은 '강원도'에서 발행하고 사용할 수 있는 상품권입니다.");
+                    break;
+                case 2 :
+                    CardTitleText.setText("온누리상품권");
+                    CardText.setText("온누리상품권은 전통시장에서 사용할 수 있는 상품권입니다.");
+                    break;
+                case 3 :
+                    CardTitleText.setText("문화상품권");
+                    CardText.setText("문화상품권은 한국문화진흥원에서 발행하는 상품권으로 온라인에서 사용할 수 있는 상품권입니다.");
+                    break;
+                case 4 :
+                    CardTitleText.setText("신세계상품권");
+                    CardText.setText("신세계 계열사 및 제휴된 가맹점에서 사용할 수 있는 상품권으로, 대표적으로 전국 이마트, 신세계백화점 등에서 사용할 수 있는 상품권입니다.");
+                    break;
+            }
         }
 
     }
 
     static class ColorItemWithNoHeaderViewHolder extends CardStackView.ViewHolder {
         View mLayout;
-        TextView mTextTitle,textView, CardTitleText;
+        TextView CardNumberText,CardText, CardTitleText;
 
         public ColorItemWithNoHeaderViewHolder(View view) {
             super(view);
             mLayout = view.findViewById(R.id.frame_list_card_item);
-            mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
-            textView = view.findViewById(R.id.text_view);
+            CardNumberText = (TextView) view.findViewById(R.id.CardNumberText);
             CardTitleText = view.findViewById(R.id.CardTitleText);
+            CardText = view.findViewById(R.id.CardText);
         }
 
         @Override
@@ -104,23 +128,23 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, int position) {
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
-            mTextTitle.setText(String.valueOf(position));
+            CardNumberText.setText(String.valueOf(position));
             switch (position){
                 case 0 :
                     CardTitleText.setText("춘천사랑상품권");
-                    textView.setText("춘천사랑상품권은 '강원도 춘천시'에서 발행하고 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("춘천사랑상품권은 '강원도 춘천시'에서 발행하고 사용할 수 있는 상품권입니다.");
                     break;
                 case 1 :
                     CardTitleText.setText("온누리상품권");
-                    textView.setText("온누리상품권은 전통시장에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("온누리상품권은 전통시장에서 사용할 수 있는 상품권입니다.");
                     break;
                 case 2 :
                     CardTitleText.setText("문화상품권");
-                    textView.setText("문화상품권은 한국문화진흥원에서 발행하는 상품권으로 온라인에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("문화상품권은 한국문화진흥원에서 발행하는 상품권으로 온라인에서 사용할 수 있는 상품권입니다.");
                     break;
                 case 3 :
                     CardTitleText.setText("신세계상품권");
-                    textView.setText("신세계 계열사 및 제휴된 가맹점에서 사용할 수 있는 상품권으로, 대표적으로 전국 이마트, 신세계백화점 등에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("신세계 계열사 및 제휴된 가맹점에서 사용할 수 있는 상품권으로, 대표적으로 전국 이마트, 신세계백화점 등에서 사용할 수 있는 상품권입니다.");
                     break;
             }
         }
@@ -130,15 +154,15 @@ public class TestStackAdapter extends StackAdapter<Integer> {
     static class ColorItemLargeHeaderViewHolder extends CardStackView.ViewHolder {
         View mLayout;
         View mContainerContent;
-        TextView mTextTitle,CardTitleText,textView;
+        TextView CardNumberText,CardTitleText,CardText;
 
         public ColorItemLargeHeaderViewHolder(View view) {
             super(view);
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
-            mTextTitle = (TextView) view.findViewById(R.id.text_list_card_title);
+            CardNumberText = (TextView) view.findViewById(R.id.CardNumberText);
             CardTitleText = view.findViewById(R.id.CardTitleText);
-            textView = view.findViewById(R.id.text_view);
+            CardText = view.findViewById(R.id.CardText);
 
         }
 
@@ -160,7 +184,7 @@ public class TestStackAdapter extends StackAdapter<Integer> {
 
         public void onBind(Integer data, int position) {
             mLayout.getBackground().setColorFilter(ContextCompat.getColor(getContext(), data), PorterDuff.Mode.SRC_IN);
-            mTextTitle.setText(String.valueOf(position));
+            CardNumberText.setText(String.valueOf(position));
 
             itemView.findViewById(R.id.text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,19 +195,19 @@ public class TestStackAdapter extends StackAdapter<Integer> {
             switch (position){
                 case 0 :
                     CardTitleText.setText("춘천사랑상품권");
-                    textView.setText("춘천사랑상품권은 '강원도 춘천시'에서 발행하고 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("춘천사랑상품권은 '강원도 춘천시'에서 발행하고 사용할 수 있는 상품권입니다.");
                     break;
                 case 1 :
                     CardTitleText.setText("온누리상품권");
-                    textView.setText("온누리상품권은 전통시장에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("온누리상품권은 전통시장에서 사용할 수 있는 상품권입니다.");
                     break;
                 case 2 :
                     CardTitleText.setText("문화상품권");
-                    textView.setText("문화상품권은 한국문화진흥원에서 발행하는 상품권으로 온라인에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("문화상품권은 한국문화진흥원에서 발행하는 상품권으로 온라인에서 사용할 수 있는 상품권입니다.");
                     break;
                 case 3 :
                     CardTitleText.setText("신세계상품권");
-                    textView.setText("신세계 계열사 및 제휴된 가맹점에서 사용할 수 있는 상품권으로, 대표적으로 전국 이마트, 신세계백화점 등에서 사용할 수 있는 상품권입니다.");
+                    CardTitleText.setText("신세계 계열사 및 제휴된 가맹점에서 사용할 수 있는 상품권으로, 대표적으로 전국 이마트, 신세계백화점 등에서 사용할 수 있는 상품권입니다.");
                     break;
             }
         }
