@@ -33,7 +33,8 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class CartFragment extends Fragment implements DiscreteScrollView.OnItemChangedListener{
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    ShopAdapter shopAdapter = new ShopAdapter();
+    SharedPreferences MungmuiDATA;
+    ShopAdapter shopAdapter;
     CardData cardData = new CardData();
 
     private ArrayList<Item> data;
@@ -41,8 +42,7 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
     private Shop shop;
     private int position = 4;
 
-    private TextView currentItemName;
-    private TextView currentItemPrice;
+    private TextView currentItemName, TitleText, currentItemPrice;
     private ImageView rateItemButton;
     private DiscreteScrollView itemPicker;
     private InfiniteScrollAdapter infiniteAdapter;
@@ -50,7 +50,6 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
     public CartFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,16 +64,23 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences positionDATA = getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
         Map<String,?> ImageUrls = positionDATA.getAll();
+        MungmuiDATA = this.getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
+        shopAdapter = new ShopAdapter(getContext(),MungmuiDATA);
 
         currentItemName = view.findViewById(R.id.NameText);
-        currentItemName.setText("<>");
+        currentItemName.setText("<등록된 멍무이가 없습니다...>");
 
         for(Map.Entry<String,?> entry : ImageUrls.entrySet()){
-            cardData.setItems(
-                    entry.getKey(),
-                    "test",
-                    entry.getValue()+""
-            );
+            if(entry.getKey() != "Active_Mungmui"){
+                cardData.setItems(
+                        entry.getKey(),
+                        "test",
+                        entry.getValue()+""
+                );
+            }else{
+
+            }
+
         }
 
         itemPicker = view.findViewById(R.id.picker);
@@ -88,6 +94,12 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
     @Override
     public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int i) {
         currentItemName.setText("<" + cardData.getName(i) + ">");
+        shopAdapter.setUrlName(cardData.getImageurl(i),cardData.getName(i));
     }
+
+    void itemclick(int i){
+
+    }
+
 
 }

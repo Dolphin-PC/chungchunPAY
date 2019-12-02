@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
 
+
         FirebaseDB();
     }
 

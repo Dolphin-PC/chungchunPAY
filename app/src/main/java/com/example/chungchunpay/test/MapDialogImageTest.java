@@ -42,7 +42,7 @@ public class MapDialogImageTest extends AppCompatActivity {
     List<Item> data;
     Uri DBuri;
 
-    ShopAdapter shopAdapter = new ShopAdapter();
+    ShopAdapter shopAdapter = new ShopAdapter(getApplicationContext());
     CardData cardData = new CardData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {

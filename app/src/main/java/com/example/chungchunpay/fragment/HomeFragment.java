@@ -1,6 +1,8 @@
 package com.example.chungchunpay.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +23,6 @@ import com.example.chungchunpay.activity.MainActivity;
 import com.example.chungchunpay.activity.MapActivity;
 import com.example.chungchunpay.activity.PayActivity;
 
-import java.util.Random;
-
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView MainImageView;
     TextView NicknameText, AgeText, GenderText, HobbyText;
     Button TourButton, PayButton;
-    Boolean isActive = false;
+    Boolean isActive = true;
     String Nickname, Age,Gender, Hobby,ID;
 
     public HomeFragment() {
@@ -85,6 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 
         switch (view.getId()){
             case R.id.MainimageView :
@@ -105,7 +106,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             case R.id.PayButton :
                 //TODO : 보안 비밀번호 or 지문 인증 구현
-                Go_Intent(new Intent(getActivity(), PayActivity.class));
+                dialog.setTitle("결제 인증").setMessage("이 단계에서는 본인인증이 진행됩니다.\n(테스트 모드)").setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Go_Intent(new Intent(getActivity(), PayActivity.class));
+                    }
+                }).show();
                 break;
 
         }
@@ -115,10 +121,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
+
     void GIF(Boolean isActive){
+        SharedPreferences MungmuiDATA = getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
+        String url = MungmuiDATA.getString("Active_Mungmui","Nothing");
 
         if(isActive) {
-            Random random = new Random();
+            /*Random random = new Random();
             int num = random.nextInt(3);
             switch (num) {
                 case 0:
@@ -131,6 +140,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     Glide.with(getActivity()).load(R.drawable.main3).into(MainImageView);
                     break;
 
+            }*/
+            if(!url.equals("Nothing")){
+                Glide.with(getActivity()).load(url).into(MainImageView);
+            }else{
+                Glide.with(getActivity()).load(R.drawable.main1).into(MainImageView);
             }
             this.isActive = false;
         }else{

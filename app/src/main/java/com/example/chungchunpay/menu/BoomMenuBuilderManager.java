@@ -22,17 +22,7 @@ public class BoomMenuBuilderManager {
             R.drawable.bus,
             R.drawable.taxi,
             R.drawable.gs,
-            R.drawable.bank,
-            R.drawable.fingerprint,
-            R.drawable.home,
-            R.drawable.ic_home_outline_grey600_24dp,
-            R.drawable.ic_logout_grey600_24dp,
-            R.drawable.image,
-            R.drawable.logo,
-            R.drawable.user,
-            R.drawable.menu,
-            R.drawable.menu_my,
-            R.drawable.up_arrow
+            R.drawable.bank
     };
 
     private static int imageResourceIndex = 0;

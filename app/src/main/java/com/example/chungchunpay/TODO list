@@ -1,9 +1,10 @@
 TODO : 11/29
 //5) CardFragment - Gif Name Change
-2) NFC - payable
-7) kakaopay connect
 
 //1) HomeFragment - UI
 //3) WalletFragment - text changed
-4) SettingFragment -  Setting Change Dialog
+//4) SettingFragment -  Setting Change Dialog
+
 6) DataBase setting
+2) NFC - payable
+7) kakaopay connect

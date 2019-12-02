@@ -30,6 +30,9 @@ public class CardData {
     public String getImageurl() {
         return imageurl;
     }
+    public String getImageurl(int position) {
+        return items.get(position).getImageUri();
+    }
 
     public String getText() {
         return text;

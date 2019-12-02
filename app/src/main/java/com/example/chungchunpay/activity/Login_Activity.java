@@ -1,5 +1,6 @@
 package com.example.chungchunpay.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +22,7 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
-public class Login_Activity extends AppCompatActivity {
+public class Login_Activity extends AppCompatActivity implements View.OnClickListener {
 
     Button GoogleButton,FacebookButton,FingerprintButton;
     LoginButton KakaoButton;
@@ -32,7 +34,6 @@ public class Login_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         init();
-        click();
     }
 
     void init(){
@@ -40,6 +41,11 @@ public class Login_Activity extends AppCompatActivity {
         FacebookButton = findViewById(R.id.Loginfacebook_Button);
         KakaoButton = findViewById(R.id.Loginkakao_Button);
         FingerprintButton = findViewById(R.id.Loginfingerprint_Button);
+
+        KakaoButton.setOnClickListener(this);
+        FacebookButton.setOnClickListener(this);
+        GoogleButton.setOnClickListener(this);
+        FingerprintButton.setOnClickListener(this);
 
         ImageView gif = findViewById(R.id.gif);
 
@@ -56,6 +62,30 @@ public class Login_Activity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClick(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        switch (view.getId()){
+            case R.id.Logingoogle_Button:
+            case R.id.Loginfacebook_Button :
+            case R.id.Loginfingerprint_Button :
+                dialog.setTitle("서비스 준비 중입니다.").setMessage("카카오 로그인을 이용해주세요.").setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
+                break;
+            case R.id.Loginkakao_Button :
+                callback = new SessionCallback();
+                Session.getCurrentSession().addCallback(callback);
+                break;
+
+
+        }
+    }
+
     void click(){
         KakaoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +97,7 @@ public class Login_Activity extends AppCompatActivity {
 //                session.open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN,Login_Activity.this);
             }
         });
+
     }
 
     @Override

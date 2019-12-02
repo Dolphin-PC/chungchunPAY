@@ -1,6 +1,8 @@
 package com.example.chungchunpay.activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,7 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -208,6 +212,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SearchButton = findViewById(R.id.SearchButton);
         ProfileImageView = findViewById(R.id.ProfileImageView);
 
+        //SearchEditText Function
+        SearchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        //SearchEditText Enter ClickedEvent
+        SearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId){
+                    case EditorInfo.IME_ACTION_SEARCH :
+                        SearchEditText.setError("지원하지 않는 기능입니다.");
+                        SearchEditText.setText("");
+//                        Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
+                        break;
+                    //TODO : Search function
+                }
+                return true;
+            }
+        });
+
+        MapListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        SearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         NaverMap_API_JSON = "\"https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=";
         NaverMap_API_JSON += SearchKeyword + "&coordinate=";
         NaverMap_API_JSON += SearchPosition + "\" \\\n\t-H \"X-NCP-APIGW-API-KEY-ID: {";
@@ -286,16 +322,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
                             }
+                            Toast.makeText(getApplicationContext(),category +" 검색 결과 : [" + i + "]건이 검색되었습니다.",Toast.LENGTH_SHORT).show();
                         }else{
                             Log.e("test DB","Error",task.getException());
                         }
+
                     }
                 });
     }
 
     void click(String MarkerName) {
+        //Dialog Image Click Event
         StorageReference MarkerImageofMarkerName = TourImageRef.child(MarkerName+".jpg");
-//        new MapDialog(MarkerImageofMarkerName);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         MarkerImageofMarkerName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -316,11 +356,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MapDialogImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                qrScan = new IntentIntegrator(MapActivity.this);
-                qrScan.setCaptureActivity(CaptureForm.class);
-                qrScan.setOrientationLocked(false); // default가 세로모드인데 휴대폰 방향에 따라 가로, 세로로 자동 변경됩니다.
-                qrScan.setPrompt("'" + MarkerName + "'\n" + "QR코드를 인식해주세요!");
-                qrScan.initiateScan();
+                dialog.setTitle("멍무이 획득하기").setMessage("멍무이를 획득할 방법을 선택해주세요.")
+                        .setPositiveButton("QR코드", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                qrScan = new IntentIntegrator(MapActivity.this);
+                                qrScan.setCaptureActivity(CaptureForm.class);
+                                qrScan.setOrientationLocked(false); // default가 세로모드인데 휴대폰 방향에 따라 가로, 세로로 자동 변경됩니다.
+                                qrScan.setPrompt("'" + MarkerName + "'\n" + "QR코드를 인식해주세요!");
+                                qrScan.initiateScan();
+                            }
+                        })
+                        .setNegativeButton("AR로 보기", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
             }
         });
     }
