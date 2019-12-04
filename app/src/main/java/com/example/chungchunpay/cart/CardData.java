@@ -18,7 +18,14 @@ public class CardData {
 
 
     public void setItems(String name, String text, String imageurl){
-        items.add(new Item(1,name,text,imageurl));
+        try{
+            if(!name.equals("Active_Mungmui") || !name.isEmpty()){
+                items.add(new Item(1,name,text,imageurl));
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
     public ArrayList<Item> getItems() {
         return items;

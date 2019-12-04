@@ -13,10 +13,10 @@
     <uses-permission android:name="android.permission.NFC" />
 
     <uses-feature android:name="android.hardware.nfc" /> <!-- Sceneform requires OpenGL ES 3.0 or later. -->
+
     <uses-feature
-        android:glEsVersion="0x00030000"
+        android:name="android.hardware.camera.ar"
         android:required="true" />
-    <uses-feature android:name="android.hardware.camera.ar" />
 
     <application
         android:name=".kakao.GlobalApplication"
@@ -27,45 +27,31 @@
         android:roundIcon="@mipmap/logo_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Dialog.MungMuiDialog"></activity>
+        <activity
+            android:name=".Augmented_Image.ArActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="locked"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        </activity>
+        <activity android:name=".Dialog.MungMuiDialog" />
         <activity
             android:name=".CaptureForm"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
         <activity android:name=".test.MapDialogImageTest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Dialog.MapDialog" />
         <activity
             android:name=".activity.PayActivity"
             android:theme="@style/Dark_AppTheme">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.MapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.Login_Activity"
@@ -73,13 +59,6 @@
         <activity
             android:name=".activity.splash"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activity.ArCameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

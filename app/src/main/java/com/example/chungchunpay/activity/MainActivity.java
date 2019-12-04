@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chungchunpay.BackPressCloseHandler;
 import com.example.chungchunpay.FireCloud_Data.DataUser;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.fragment.CartFragment;
@@ -37,7 +39,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     private Drawable[] screenIcons;
 
     private SlidingRootNav slidingRootNav;
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,12 +143,14 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
 
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
 
         FirebaseDB();
     }
 
     void FirebaseDB(){
+        //초기실행 1회
         DocumentReference documentReference = FireDB.collection("users").document(ID);
         documentReference.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -167,6 +174,22 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
                     }
                 });
+
+        DocumentReference documentReference1 = FireDB.collection("users").document(ID);
+        documentReference1.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(e!=null){
+                    //failed
+                }
+
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                    DataUser dataUser = documentSnapshot.toObject(DataUser.class);
+                    LeftDrawerPointText.setText(dataUser.getPoint()+"");
+                    BottomPointText.setText(dataUser.getPoint()+"");
+                }
+            }
+        });
     }
 
     void SlidingUpPanel(){
@@ -249,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 (mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
             mLayout.setPanelState(PanelState.COLLAPSED);
         } else {
-            super.onBackPressed();
+            backPressCloseHandler.onBackPressed();
         }
     }
 

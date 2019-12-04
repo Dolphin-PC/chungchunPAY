@@ -8,18 +8,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 public final class SnackbarHelper {
     private static final int BACKGROUND_COLOR = 0xbf323232;
-    private static final SnackbarHelper THE_INSTANCE = new SnackbarHelper();
     private Snackbar messageSnackbar;
-
-    private enum DismissBehavior {
-        HIDE,
-        SHOW,
-        FINISH
-    };
-
-    public static SnackbarHelper getInstance() {
-        return THE_INSTANCE;
-    }
+    private enum DismissBehavior { HIDE, SHOW, FINISH };
 
     public boolean isShowing() {
         return messageSnackbar != null;

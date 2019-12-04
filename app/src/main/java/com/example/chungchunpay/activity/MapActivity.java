@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.chungchunpay.Augmented_Image.ArActivity;
 import com.example.chungchunpay.CaptureForm;
 import com.example.chungchunpay.FireCloud_Data.DataMap;
 import com.example.chungchunpay.FireCloud_Data.DataTourMungMui;
@@ -370,7 +371,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .setNegativeButton("AR로 보기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(),ArActivity.class));
+//                                Toast.makeText(getApplicationContext(),"현재 지원하지 않는 기능입니다.",Toast.LENGTH_SHORT).show();
                             }
                         }).show();
             }
@@ -562,6 +564,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         UserHaveMap.put("PointName",TagName);
         UserHaveMap.put("ImageUrl",ImageUrl);
 
+        HashMap<String, Object> user = new HashMap<>();
+        user.put("Point",2000);
+
         FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .add(UserHaveMap)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -586,6 +591,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(MapActivity.this,"<" + MungmuiName + ">를(을) 획득에 실패하였습니다...",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        FirebaseDB.collection("users").document(ID)
+                .update(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //포인트 적립 완료
+                        Toast.makeText(MapActivity.this,"2000P가 적립되었습니다!",Toast.LENGTH_LONG).show();
                     }
                 });
 

@@ -33,7 +33,6 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class CartFragment extends Fragment implements DiscreteScrollView.OnItemChangedListener{
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    SharedPreferences MungmuiDATA;
     ShopAdapter shopAdapter;
     CardData cardData = new CardData();
 
@@ -64,22 +63,18 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences positionDATA = getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
         Map<String,?> ImageUrls = positionDATA.getAll();
-        MungmuiDATA = this.getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
-        shopAdapter = new ShopAdapter(getContext(),MungmuiDATA);
+//        MungmuiDATA = this.getActivity().getSharedPreferences("MungMuiData",MODE_PRIVATE);
+        shopAdapter = new ShopAdapter(getContext(),positionDATA);
 
         currentItemName = view.findViewById(R.id.NameText);
         currentItemName.setText("<등록된 멍무이가 없습니다...>");
 
         for(Map.Entry<String,?> entry : ImageUrls.entrySet()){
-            if(entry.getKey() != "Active_Mungmui"){
-                cardData.setItems(
-                        entry.getKey(),
-                        "test",
-                        entry.getValue()+""
-                );
-            }else{
-
-            }
+            cardData.setItems(
+                    entry.getKey(),
+                    "test",
+                    entry.getValue()+""
+            );
 
         }
 
@@ -93,13 +88,12 @@ public class CartFragment extends Fragment implements DiscreteScrollView.OnItemC
 
     @Override
     public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int i) {
-        currentItemName.setText("<" + cardData.getName(i) + ">");
-        shopAdapter.setUrlName(cardData.getImageurl(i),cardData.getName(i));
+        if(i == 0){
+            currentItemName.setText("<메인 활성화>");
+            shopAdapter.setUrlName(cardData.getImageurl(i),cardData.getName(i));
+        }else{
+            currentItemName.setText("<" + cardData.getName(i) + ">");
+            shopAdapter.setUrlName(cardData.getImageurl(i),cardData.getName(i));
+        }
     }
-
-    void itemclick(int i){
-
-    }
-
-
 }

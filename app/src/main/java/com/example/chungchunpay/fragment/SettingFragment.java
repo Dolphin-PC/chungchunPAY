@@ -81,7 +81,7 @@ public class SettingFragment extends MaterialAboutFragment{
         // Add items to card
 
         appCardBuilder.addItem(new MaterialAboutTitleItem.Builder()
-                .text("팔도강산 멍무이")
+                .text("청춘페이")
                 .desc("© EC&H")
                 .icon(R.drawable.logo)
                 .build());
@@ -289,9 +289,9 @@ public class SettingFragment extends MaterialAboutFragment{
         SharedPreferences positionDATA = c.getSharedPreferences("UserData",MODE_PRIVATE);
         SharedPreferences.Editor editor = positionDATA.edit();
 
-        String Age = positionDATA.getString("AGE","20");
-        String Hobby = positionDATA.getString("HOBBY","춘천");
-        String Gender = positionDATA.getString("GENDER","남/여");
+        String Age = positionDATA.getString("AGE","설정해주세요.");
+        String Hobby = positionDATA.getString("HOBBY","설정해주세요.");
+        String Gender = positionDATA.getString("GENDER","설정해주세요.");
 
         return new MaterialAboutItemOnClickAction() {
             public void onClick() {

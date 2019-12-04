@@ -3,6 +3,7 @@ package com.example.chungchunpay.activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -14,9 +15,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.chungchunpay.FireCloud_Data.DataUser;
 import com.example.chungchunpay.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,6 +39,9 @@ public class PayActivity extends AppCompatActivity {
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
+    FirebaseFirestore FirebaseDB = FirebaseFirestore.getInstance();
+    String ID;
+    int point;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,23 @@ public class PayActivity extends AppCompatActivity {
 
         init();
 
+        SharedPreferences positionDATA = getSharedPreferences("UserData",MODE_PRIVATE);
+        ID = positionDATA.getString("ID","");
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        FirebaseDB.setFirestoreSettings(settings);
+
+        FirebaseDB.collection("users").document(ID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        DataUser dataUser = documentSnapshot.toObject(DataUser.class);
+                        point = dataUser.getPoint();
+                    }
+                });
     }
 
     @Override
@@ -114,6 +142,8 @@ public class PayActivity extends AppCompatActivity {
     }
 
     void nfc(Intent intent){
+        Map<String, Object> user  = new HashMap<>();
+
         String s = ""; // 글씨를 띄우는데 사용
         Parcelable[] data = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES); // EXTRA_NDEF_MESSAGES : 여분의 배열이 태그에 존재한다.
         if(data != null)
@@ -133,11 +163,35 @@ public class PayActivity extends AppCompatActivity {
                 }
             }
             catch(Exception e) { }
+        }else{
+            finish();
+            Toast.makeText(getApplicationContext(),"결제에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+            return;
+
+
         }
         //TODO : 결제 처리, point - pay요금
-        finish();
+
         long[] pattern = {0, 1000};  // 대기, 진동
         vibrator.vibrate(pattern, -1);
-        Toast.makeText(getApplicationContext(),"NFC read value : " + s,Toast.LENGTH_SHORT).show();
+
+        s = s.split("\n")[1];
+        int pay = Integer.parseInt(s);
+        if(point >= pay){
+            user.put("Point",point-pay);
+            FirebaseDB.collection("users").document(ID)
+                    .update(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getApplicationContext(),pay+"원이 결제 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }else{
+            Toast.makeText(getApplicationContext(),"결제 실패 : 금액 부족",Toast.LENGTH_SHORT).show();
+        }
+
+        finish();
     }
 }
