@@ -28,6 +28,7 @@ import com.example.chungchunpay.Augmented_Image.ArActivity;
 import com.example.chungchunpay.CaptureForm;
 import com.example.chungchunpay.FireCloud_Data.DataMap;
 import com.example.chungchunpay.FireCloud_Data.DataTourMungMui;
+import com.example.chungchunpay.FireCloud_Data.DataUser;
 import com.example.chungchunpay.NaverJSON;
 import com.example.chungchunpay.R;
 import com.example.chungchunpay.menu.BoomMenuBuilderManager;
@@ -68,7 +69,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import nl.dionsegijn.konfetti.KonfettiView;
@@ -95,6 +98,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ImageView ProfileImageView , MapDialogImage ,MungMuiDialogImage;
     TextView Map_DialogText, MungMuiDialogNameText, MungMuiDialogFindORHaveText, MungMuiTitleText;
     String ID, ImageUrl;
+
+    int User_point;
 
     //Naver 지도 검색
     String latitude = "37.898943";
@@ -542,6 +547,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
+        FirebaseDB.collection("users").document(ID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                DataUser dataUser = documentSnapshot.toObject(DataUser.class);
+                User_point = dataUser.getPoint();
+            }
+        });
+
         MungMuiDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -554,6 +567,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void MungMuiGetEvent(String TagName,String MungmuiName){
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String currentTime = simpleDateFormat.format(mDate);
+
         SharedPreferences positionDATA = getSharedPreferences("MungMuiData",MODE_PRIVATE);
         SharedPreferences.Editor editor = positionDATA.edit();
 
@@ -565,7 +583,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         UserHaveMap.put("ImageUrl",ImageUrl);
 
         HashMap<String, Object> user = new HashMap<>();
-        user.put("Point",2000);
+        user.put("Point",User_point + 2000);
+
+        HashMap<String, Object> user_report = new HashMap<>();
+        user_report.put("point",2000);
+        user_report.put("ID",ID);
+        user_report.put("time",currentTime);
 
         FirebaseDB.collection("user_have").document("_"+ID).collection("mungmui")
                 .add(UserHaveMap)
@@ -604,6 +627,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
+        FirebaseDB.collection("report").document(ID).collection("get_point").add(user_report);
 
     }
 

@@ -22,7 +22,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -41,7 +43,7 @@ public class PayActivity extends AppCompatActivity {
 
     FirebaseFirestore FirebaseDB = FirebaseFirestore.getInstance();
     String ID;
-    int point;
+    int point,donate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +144,20 @@ public class PayActivity extends AppCompatActivity {
     }
 
     void nfc(Intent intent){
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String currentTime = simpleDateFormat.format(mDate);
+
+        HashMap<String, Object> user_report = new HashMap<>();
+        user_report.put("point",1000);
+        user_report.put("ID",ID);
+        user_report.put("time",currentTime);
+        user_report.put("donate",10);
+
+        HashMap<String, Object> user_donate = new HashMap<>();
+        user_donate.put("total_donate",donate+10);
+
         Map<String, Object> user  = new HashMap<>();
 
         String s = ""; // 글씨를 띄우는데 사용
@@ -171,7 +187,6 @@ public class PayActivity extends AppCompatActivity {
 
         }
         //TODO : 결제 처리, point - pay요금
-
         long[] pattern = {0, 1000};  // 대기, 진동
         vibrator.vibrate(pattern, -1);
 
@@ -185,12 +200,30 @@ public class PayActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getApplicationContext(),pay+"원이 결제 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                            FirebaseDB.collection("report").document(ID).collection("use_point").add(user_report);
+                            FirebaseDB.collection("report").document(ID).update(user_donate);
+                            //TODO:
+                            /*FirebaseDB.collection("report").document(ID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    DataDonate dataDonate = documentSnapshot.toObject(DataDonate.class);
+                                    donate = dataDonate.getTotal_donate();
+                                }
+                            });*/
                         }
                     });
 
         }else{
             Toast.makeText(getApplicationContext(),"결제 실패 : 금액 부족",Toast.LENGTH_SHORT).show();
         }
+
+        /*FirebaseDB.collection("report").document(ID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                DataDonate dataDonate = documentSnapshot.toObject(DataDonate.class);
+                donate = dataDonate.getTotal_donate();
+            }
+        });*/
 
         finish();
     }

@@ -37,7 +37,9 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ArActivity extends AppCompatActivity {
@@ -189,6 +191,16 @@ public class ArActivity extends AppCompatActivity {
     }
 
     private void initializeSceneView() {
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String currentTime = simpleDateFormat.format(mDate);
+
+        HashMap<String, Object> user_report = new HashMap<>();
+        user_report.put("point",2000);
+        user_report.put("ID",ID);
+        user_report.put("time",currentTime);
+
         arSceneView.getScene().addOnUpdateListener((this::onUpdateFrame));
         arSceneView.getScene().addOnPeekTouchListener(new Scene.OnPeekTouchListener() {
             @Override
@@ -201,14 +213,8 @@ public class ArActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"현재 AR에서는 포인트 적립만 가능합니다.",Toast.LENGTH_LONG).show();
                                 HashMap<String, Object> user = new HashMap<>();
                                 user.put("Point",current_point + 2000);
-                                FirebaseDB.collection("users").document(ID)
-                                        .update(user)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-
-                                            }
-                                        });
+                                FirebaseDB.collection("users").document(ID).update(user);
+                                FirebaseDB.collection("report").document(ID).collection("get_point").add(user_report);
                             }
                         }).show();
 //                            Toast.makeText(getApplicationContext(),MungmuiName,Toast.LENGTH_SHORT).show();
